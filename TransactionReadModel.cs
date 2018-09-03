@@ -1,16 +1,27 @@
-﻿namespace TransactionsCQRS.EventFlow
-{
-    public class TransactionReadModel
-    {
-        public long Amount { get; }
-        public TransactionType Type { get; }
-        public long PreviousBalance { get; }
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using EventFlow.Aggregates;
+using EventFlow.MsSql.ReadStores;
+using EventFlow.ReadStores;
 
-        public TransactionReadModel(long amount, TransactionType type, long previousBalance)
+namespace TransactionsCQRS.EventFlow
+{
+    [Table("ReadModel-Transaction")]
+    public class TransactionReadModel:MssqlReadModel, IReadModel, IAmReadModelFor<AccountAggregate, AccountId, AccountCreditedEvent>,
+        IAmReadModelFor<AccountAggregate, AccountId, AccountDebitedEvent>
+    {
+        public long Amount { get; set; }
+        public string Type { get; set; }
+
+        public void Apply(IReadModelContext context, IDomainEvent<AccountAggregate, AccountId, AccountCreditedEvent> domainEvent)
         {
-            Amount = amount;
-            Type = type;
-            PreviousBalance = previousBalance;
+            Amount = domainEvent.AggregateEvent.Amount;
+            Type = "Credit";
+        }
+
+        public void Apply(IReadModelContext context, IDomainEvent<AccountAggregate, AccountId, AccountDebitedEvent> domainEvent)
+        {
+            Amount = domainEvent.AggregateEvent.Amount;
+            Type = "Debit";
         }
     }
 }
