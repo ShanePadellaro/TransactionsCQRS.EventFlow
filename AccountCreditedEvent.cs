@@ -11,6 +11,4 @@ namespace TransactionsCQRS.EventFlow
             Amount = amount;
         }
     }
-
-    
 }

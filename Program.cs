@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventFlow;
 using EventFlow.Core;
+using EventFlow.Elasticsearch.Extensions;
 using EventFlow.Extensions;
 using EventFlow.Queries;
+using Nest;
 
 namespace TransactionsCQRS.EventFlow
 {
@@ -12,16 +14,32 @@ namespace TransactionsCQRS.EventFlow
     {
         static async Task Main(string[] args)
         {
-            var resolver = EventFlowOptions.New.AddEvents(typeof(AccountCreditedEvent))
+            var resolver = EventFlowOptions.New
+                .ConfigureElasticsearch(new Uri("http://localhost:9200/"))
+                .AddEvents(typeof(AccountCreditedEvent))
                 .AddEvents(typeof(AccountDebitedEvent))
                 .AddCommands(typeof(CreditAccountCommand))
                 .AddCommandHandlers(typeof(DebitAccountCommandHandler))
                 .AddCommandHandlers(typeof(CreditAccountCommandHandler))
-                .UseInMemoryReadStoreFor<AccountReadModel>().CreateResolver();
+                .UseElasticsearchReadModel<AccountReadModel>()
+                .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
+                .CreateResolver();
+
+
+
+//  Mapping needed for first run
+//            var _elasticClient = resolver.Resolve<IElasticClient>();
+//            _elasticClient.CreateIndex("account", c => c
+//                .Settings(s => s
+//                    .NumberOfShards(1)
+//                    .NumberOfReplicas(0))
+//                .Mappings(m => m
+//                    .Map<AccountReadModel>(d => d
+//                        .AutoMap())));
 
             var id = AccountId.New;
             var commandBus = resolver.Resolve<ICommandBus>();
-            
+
             var result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100),
                 CancellationToken.None);
 
@@ -30,14 +48,14 @@ namespace TransactionsCQRS.EventFlow
 
             result = await commandBus.PublishAsync(new DebitAccountCommand(id, 300),
                 CancellationToken.None);
-            
-            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 300), 
+
+            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 300),
                 CancellationToken.None);
-            
+
             var queryProcessor = resolver.Resolve<IQueryProcessor>();
 
             var accountReadModel = await queryProcessor.ProcessAsync(
-                    new ReadModelByIdQuery<AccountReadModel>(id),
+                    new GetAccountByIdQuery(id), 
                     CancellationToken.None)
                 .ConfigureAwait(false);
         }

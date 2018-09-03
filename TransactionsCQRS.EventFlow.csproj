@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="EventFlow" Version="0.64.3598" />
+      <PackageReference Include="EventFlow.Elasticsearch" Version="0.64.3598" />
     </ItemGroup>
 
 </Project>
