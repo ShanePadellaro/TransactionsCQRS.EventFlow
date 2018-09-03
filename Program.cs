@@ -5,6 +5,7 @@ using EventFlow;
 using EventFlow.Core;
 using EventFlow.Elasticsearch.Extensions;
 using EventFlow.Extensions;
+using EventFlow.MongoDB.Extensions;
 using EventFlow.Queries;
 using Nest;
 
@@ -16,6 +17,8 @@ namespace TransactionsCQRS.EventFlow
         {
             var resolver = EventFlowOptions.New
                 .ConfigureElasticsearch(new Uri("http://localhost:9200/"))
+                .ConfigureMongoDb("mongodb://localhost", "test")
+                .UseMongoDbEventStore()
                 .AddEvents(typeof(AccountCreditedEvent))
                 .AddEvents(typeof(AccountDebitedEvent))
                 .AddCommands(typeof(CreditAccountCommand))
@@ -37,7 +40,7 @@ namespace TransactionsCQRS.EventFlow
 //                    .Map<AccountReadModel>(d => d
 //                        .AutoMap())));
 
-            var id = AccountId.New;
+            var id = new AccountId("account-59f5a0b8-61f3-47b2-87b9-5ad50c4ddc6d");
             var commandBus = resolver.Resolve<ICommandBus>();
 
             var result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100),

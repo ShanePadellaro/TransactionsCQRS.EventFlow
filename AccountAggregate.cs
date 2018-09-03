@@ -18,12 +18,12 @@ namespace TransactionsCQRS.EventFlow
         
         public void Apply(AccountCreditedEvent @event)
         {
-            Balance = +@event.Amount;
+            Balance += @event.Amount;
         }
         
         public void Apply(AccountDebitedEvent @event)
         {
-            Balance = -@event.Amount;
+            Balance -= @event.Amount;
         }
 
         public IExecutionResult Debit(long amount)
