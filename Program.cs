@@ -21,23 +21,27 @@ namespace TransactionsCQRS.EventFlow
                 .UseMongoDbEventStore()
                 .AddEvents(typeof(AccountCreditedEvent))
                 .AddEvents(typeof(AccountDebitedEvent))
+                .AddEvents(typeof(TransactionCreatedEvent))
                 .AddCommands(typeof(CreditAccountCommand))
+                .AddCommands(typeof(DebitAccountCommand))
                 .AddCommandHandlers(typeof(DebitAccountCommandHandler))
                 .AddCommandHandlers(typeof(CreditAccountCommandHandler))
                 .UseElasticsearchReadModel<AccountReadModel>()
+                .UseElasticsearchReadModel<TransactionReadModel>()
                 .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
                 .CreateResolver();
 
 
 
 //  Mapping needed for first run
+            
 //            var _elasticClient = resolver.Resolve<IElasticClient>();
-//            _elasticClient.CreateIndex("account", c => c
+//            _elasticClient.CreateIndex("transaction", c => c
 //                .Settings(s => s
 //                    .NumberOfShards(1)
 //                    .NumberOfReplicas(0))
 //                .Mappings(m => m
-//                    .Map<AccountReadModel>(d => d
+//                    .Map<TransactionReadModel>(d => d
 //                        .AutoMap())));
 
             var id = new AccountId("account-59f5a0b8-61f3-47b2-87b9-5ad50c4ddc6d");

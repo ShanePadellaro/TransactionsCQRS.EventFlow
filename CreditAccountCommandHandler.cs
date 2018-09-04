@@ -14,7 +14,7 @@ namespace TransactionsCQRS.EventFlow
         {
             var result = aggregate.Credit(command.Amount);
 
-            return Task.FromResult(result);
+            return Task.FromResult<IExecutionResult>(new SuccessExecutionResult());
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TransactionsCQRS.EventFlow
             DebitAccountCommand command, CancellationToken cancellationToken)
         {
             var result = aggregate.Debit(command.Amount);
-            return Task.FromResult<IExecutionResult>(result);
+            return Task.FromResult<IExecutionResult>(new SuccessExecutionResult());
         }
     }
 }
