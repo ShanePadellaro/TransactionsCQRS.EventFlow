@@ -6,7 +6,8 @@ using Nest;
 namespace TransactionsCQRS.EventFlow
 {
     [ElasticsearchType(IdProperty = "Id", Name = "transaction")]
-    public class TransactionReadModel : IReadModel, IAmReadModelFor<Transaction, TransactionId, TransactionCreatedEvent>
+    public class TransactionReadModel : IReadModel, IAmReadModelFor<AccountAggregate, AccountId, AccountCreditedEvent>,
+        IAmReadModelFor<AccountAggregate, AccountId, AccountDebitedEvent>
     {
         [Number(NumberType.Integer, Name = "Amount", Index = false)]
         public long Amount { get; set; }
@@ -22,34 +23,22 @@ namespace TransactionsCQRS.EventFlow
 
         [Keyword(Index = true)] public string Id { get; set; }
 
-//
-//        public void Apply(IReadModelContext context,
-//            IDomainEvent<AccountAggregate, AccountId, AccountCreditedEvent> domainEvent)
-//        {
-//            Id = Guid.NewGuid().ToString();
-//            Amount = domainEvent.AggregateEvent.Amount;
-//            Type = "Credit";
-//            PreviousBalance = domainEvent.AggregateEvent.Balance;
-//
-//
-//        }
-//
-//        public void Apply(IReadModelContext context,
-//            IDomainEvent<AccountAggregate, AccountId, AccountDebitedEvent> domainEvent)
-//        {
-//            Id = Guid.NewGuid().ToString();
-//            Amount = domainEvent.AggregateEvent.Amount;
-//            Type = "Credit";
-//            PreviousBalance = domainEvent.AggregateEvent.Balance;
-//        }
+        public void Apply(IReadModelContext context,
+            IDomainEvent<AccountAggregate, AccountId, AccountDebitedEvent> domainEvent)
+        {
+            Id = domainEvent.AggregateIdentity.Value;
+            Amount = domainEvent.AggregateEvent.Amount;
+            Type = "Debit";
+            PreviousBalance = domainEvent.AggregateEvent.Balance;
+        }
 
-        public void Apply(IReadModelContext context, IDomainEvent<Transaction, TransactionId, TransactionCreatedEvent> domainEvent)
+
+        public void Apply(IReadModelContext context, IDomainEvent<AccountAggregate, AccountId, AccountCreditedEvent> domainEvent)
         {
             Id = domainEvent.AggregateIdentity.Value;
             Amount = domainEvent.AggregateEvent.Amount;
             Type = "Credit";
             PreviousBalance = domainEvent.AggregateEvent.Balance;
-            AccountId = domainEvent.AggregateEvent.AccountId.Value;
         }
     }
 }

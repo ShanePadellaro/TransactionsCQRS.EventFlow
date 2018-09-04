@@ -15,7 +15,6 @@ namespace TransactionsCQRS.EventFlow
             Index = false)]
         public long Balance { get; set; }
 
-//        public List<TransactionReadModel> Transacations { get; private set; }
         [Keyword(
             Index = true)]
         public string Id { get; set; }
@@ -24,11 +23,6 @@ namespace TransactionsCQRS.EventFlow
         public void Apply(IReadModelContext context,
             IDomainEvent<AccountAggregate, AccountId, AccountCreditedEvent> domainEvent)
         {
-//            if(Transacations == null)
-//                Transacations = new List<TransactionReadModel>();
-//            
-//            Transacations.Add(new TransactionReadModel(domainEvent.AggregateEvent.Amount, TransactionType.Credit,
-//                Balance));
             Id = domainEvent.AggregateIdentity.Value;
             Balance += domainEvent.AggregateEvent.Amount;
         }
@@ -37,11 +31,6 @@ namespace TransactionsCQRS.EventFlow
         public void Apply(IReadModelContext context,
             IDomainEvent<AccountAggregate, AccountId, AccountDebitedEvent> domainEvent)
         {
-//            if(Transacations == null)
-//                Transacations = new List<TransactionReadModel>();
-//            
-//            Transacations.Add(new TransactionReadModel(domainEvent.AggregateEvent.Amount, TransactionType.Debit,
-//                Balance));
             Id = domainEvent.AggregateIdentity.Value;
             Balance -= domainEvent.AggregateEvent.Amount;
         }

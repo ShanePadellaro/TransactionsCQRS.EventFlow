@@ -27,13 +27,14 @@ namespace TransactionsCQRS.EventFlow
                 .AddCommandHandlers(typeof(DebitAccountCommandHandler))
                 .AddCommandHandlers(typeof(CreditAccountCommandHandler))
                 .UseElasticsearchReadModel<AccountReadModel>()
-                .UseElasticsearchReadModel<TransactionReadModel>()
+                .RegisterServices(x=>x.RegisterType(typeof(TransactionReadModelLocator)))
+                .UseElasticsearchReadModel<TransactionReadModel,TransactionReadModelLocator>()
                 .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
                 .CreateResolver();
 
 
 
-//  Mapping needed for first run
+//  Elasticsearch Mapping needed for first run
             
 //            var _elasticClient = resolver.Resolve<IElasticClient>();
 //            _elasticClient.CreateIndex("transaction", c => c
