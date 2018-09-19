@@ -1,12 +1,16 @@
-﻿using EventFlow.Aggregates;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using EventFlow.Aggregates;
 using EventFlow.Aggregates.ExecutionResults;
+using EventFlow.Snapshots;
+using EventFlow.Snapshots.Strategies;
 
 namespace TransactionsCQRS.EventFlow
 {
-    public class AccountAggregate : AggregateRoot<AccountAggregate, AccountId>
+    public class AccountAggregate : SnapshotAggregateRoot<AccountAggregate, AccountId,AccountSnapshot>
     {
         public long Balance { get; private set; }
-        public AccountAggregate(AccountId id) : base(id)
+        public AccountAggregate(AccountId id) : base(id,SnapshotEveryFewVersionsStrategy.With(100))
         {
         }
 
@@ -41,6 +45,19 @@ namespace TransactionsCQRS.EventFlow
             Emit(new AccountDebitedEvent(transaction,Balance,newBalance));
             return new SuccessExecutionResult();
         }
+
+        protected override Task<AccountSnapshot> CreateSnapshotAsync(CancellationToken cancellationToken)
+        {
+            var snapshot = new AccountSnapshot() {Balance = this.Balance};
+            return Task.FromResult(snapshot);
+        }
+
+        protected override Task LoadSnapshotAsync(AccountSnapshot snapshot, ISnapshotMetadata metadata, CancellationToken cancellationToken)
+        {
+            Balance = snapshot.Balance;
+
+            return Task.CompletedTask;
+        }
     }
 
     public class AccountBalanceChangedEvent:IAggregateEvent<AccountAggregate,AccountId>
@@ -54,4 +71,12 @@ namespace TransactionsCQRS.EventFlow
             OldBalance = oldBalance;
         }
     }
+
+    [SnapshotVersion("account", 1)]
+    public class AccountSnapshot : ISnapshot
+    {
+        public long Balance { get; set; }
+    }
+
+    
 }
