@@ -9,6 +9,7 @@ using EventFlow.Extensions;
 using EventFlow.MongoDB.Extensions;
 using EventFlow.Queries;
 using Nest;
+using TransactionsCQRS.EventFlow.Queries;
 
 namespace TransactionsCQRS.EventFlow
 {
@@ -31,6 +32,7 @@ namespace TransactionsCQRS.EventFlow
                 .RegisterServices(x=>x.RegisterType(typeof(TransactionReadModelLocator)))
                 .UseMongoDbReadModel<TransactionReadModel,TransactionReadModelLocator>()
                 .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
+                .AddQueryHandler<GetFeesByCompanyIdQueryHandler,GetFeesByCompanyIdQuery,List<TransactionReadModel>>()
                 .CreateResolver();
 
 
@@ -42,7 +44,8 @@ namespace TransactionsCQRS.EventFlow
 //            props.Add(new Dictionary<string, object>() {{"item2", "value2"}});
             
             var subfee1 = new KeyValuePair("myKey","MyValue");
-            var subfee2 = new Fee(Guid.NewGuid().ToString(), "MyLabel", "USD", "0.9", 0, 0);
+            var companyId = "b3e4bf26-c93b-41f6-adf1-27b85fa82c91";
+            var subfee2 = new Fee(companyId, "MyLabel", "USD", "0.9", 0, 0);
             var subfees = new List<Fee>(){subfee2};
             var keyValueParis = new List<KeyValuePair>(){subfee1};
             var item = new TransactionItem(100,"B2C Renewal",1,keyValueParis,subfees);
@@ -52,24 +55,26 @@ namespace TransactionsCQRS.EventFlow
                 var result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
 
-            result = await commandBus.PublishAsync(new DebitAccountCommand(id,transaction), 
-                CancellationToken.None);
+//            result = await commandBus.PublishAsync(new DebitAccountCommand(id,transaction), 
+//                CancellationToken.None);
+
+
+            for (int i = 0; i < 100000; i++)
+            {
+                result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
+                    CancellationToken.None);
+            }
             
-             result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
-                CancellationToken.None);
-//
-//            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100, "myexternalId",
-//                    DateTimeOffset.Now, "MyTransactionType",props),
-//                CancellationToken.None);
-//
-//            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100, "myexternalId",
-//                    DateTimeOffset.Now, "MyTransactionType",props),
-//                CancellationToken.None);
 
             var queryProcessor = resolver.Resolve<IQueryProcessor>();
 
             var accountReadModel = await queryProcessor.ProcessAsync(
                     new GetAccountByIdQuery(id), 
+                    CancellationToken.None)
+                .ConfigureAwait(false);
+            
+            var transactions = await queryProcessor.ProcessAsync(
+                    new GetFeesByCompanyIdQuery("b3e4bf26-c93b-41f6-adf1-27b85fa82c91"), 
                     CancellationToken.None)
                 .ConfigureAwait(false);
         }

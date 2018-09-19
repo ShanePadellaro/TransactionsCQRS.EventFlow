@@ -18,13 +18,13 @@ namespace TransactionsCQRS.EventFlow
 
         public void Apply(AccountDebitedEvent @event)
         {   
-            ChangeBalance(@event.Transaction.Amount);
+            ChangeBalance(@event.NewAccountBalance);
         }
         
         
         public void Apply(AccountCreditedEvent @event)
         {
-            ChangeBalance(@event.Transaction.Amount);
+            ChangeBalance(@event.NewAccountBalance);
         }
 
         public IExecutionResult Credit(Transaction transaction)
