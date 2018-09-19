@@ -11,7 +11,7 @@ namespace TransactionsCQRS.EventFlow
         public override Task<IExecutionResult> ExecuteCommandAsync(AccountAggregate aggregate,
             DebitAccountCommand command, CancellationToken cancellationToken)
         {
-            var result = aggregate.Debit(command.Amount);
+            var result = aggregate.Debit(command.Transaction);
             return Task.FromResult<IExecutionResult>(new SuccessExecutionResult());
         }
     }

@@ -1,16 +1,20 @@
-﻿using EventFlow.Aggregates;
+﻿using System;
+using System.Collections.Generic;
+using EventFlow.Aggregates;
 
 namespace TransactionsCQRS.EventFlow
 {
     public class AccountCreditedEvent:AggregateEvent<AccountAggregate, AccountId>
     {
-        public long Amount { get; }
-        public long Balance { get; }
+        public Transaction Transaction { get; }
+        public long CurrentAccountBalance { get; }
+        public long NewAccountBalance { get; }
 
-        public AccountCreditedEvent(long amount, long balance)
+        public AccountCreditedEvent(Transaction transaction, long currentAccountBalance, long newAccountBalance)
         {
-            Amount = amount;
-            Balance = balance;
+            Transaction = transaction;
+            CurrentAccountBalance = currentAccountBalance;
+            NewAccountBalance = newAccountBalance;
         }
     }
 }

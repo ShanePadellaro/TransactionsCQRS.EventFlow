@@ -7,7 +7,7 @@ namespace TransactionsCQRS.EventFlow
 {
     public class Transaction : ValueObject
     {
-        public Transaction(string externalId, Guid accountId, string description, string type, long amount, long tax,
+        public Transaction(string externalId, string accountId, string description, string type, long amount, long tax,
             DateTimeOffset billingDate, long taxrate, string countryCode, string currencyCode,
             List<TransactionItem> transactionItems, List<Dictionary<string, object>> properties = null)
         {
@@ -26,7 +26,7 @@ namespace TransactionsCQRS.EventFlow
         }
 
         public string ExternalId { get; private set; }
-        public Guid AccountId { get; private set; }
+        public string AccountId { get; private set; }
         public string Description { get; private set; }
         public string Type { get; private set; }
         public List<Dictionary<string, object>> Properties { get; }
@@ -62,7 +62,7 @@ namespace TransactionsCQRS.EventFlow
 
     public class Fee : ValueObject
     {
-        public Fee(Guid companyId, string label, string originalCurrency, string conversionRate, long tax,
+        public Fee(string companyId, string label, string originalCurrency, string conversionRate, long tax,
             long taxRate)
         {
             CompanyId = companyId;
@@ -73,7 +73,7 @@ namespace TransactionsCQRS.EventFlow
             TaxRate = taxRate;
         }
 
-        public Guid CompanyId { get; private set; }
+        public string CompanyId { get; private set; }
         public string Label { get; private set; }
         public string OriginalCurrency { get; private set; }
         public string ConversionRate { get; private set; }

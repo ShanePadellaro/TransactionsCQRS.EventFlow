@@ -9,7 +9,11 @@
     <ItemGroup>
       <PackageReference Include="EventFlow" Version="0.64.3598" />
       <PackageReference Include="EventFlow.Elasticsearch" Version="0.64.3598" />
-      <PackageReference Include="EventFlow.MongoDB" Version="0.1.26" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EventFlow.MongoDB\Source\EventFlow.MongoDB\EventFlow.MongoDB.csproj" />
+      <ProjectReference Include="..\EventFlow\Source\EventFlow\EventFlow.csproj" />
     </ItemGroup>
 
 </Project>

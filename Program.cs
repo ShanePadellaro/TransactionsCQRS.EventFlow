@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFlow;
@@ -21,44 +22,49 @@ namespace TransactionsCQRS.EventFlow
                 .UseMongoDbEventStore()
                 .AddEvents(typeof(AccountCreditedEvent))
                 .AddEvents(typeof(AccountDebitedEvent))
-                .AddEvents(typeof(TransactionCreatedEvent))
+                .AddEvents(typeof(AccountBalanceChangedEvent))
                 .AddCommands(typeof(CreditAccountCommand))
                 .AddCommands(typeof(DebitAccountCommand))
                 .AddCommandHandlers(typeof(DebitAccountCommandHandler))
                 .AddCommandHandlers(typeof(CreditAccountCommandHandler))
-                .UseElasticsearchReadModel<AccountReadModel>()
+                .UseMongoDbReadModel<AccountReadModel>()
                 .RegisterServices(x=>x.RegisterType(typeof(TransactionReadModelLocator)))
-                .UseElasticsearchReadModel<TransactionReadModel,TransactionReadModelLocator>()
+                .UseMongoDbReadModel<TransactionReadModel,TransactionReadModelLocator>()
                 .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
                 .CreateResolver();
 
 
-
-//  Elasticsearch Mapping needed for first run
-            
-//            var _elasticClient = resolver.Resolve<IElasticClient>();
-//            _elasticClient.CreateIndex("transaction", c => c
-//                .Settings(s => s
-//                    .NumberOfShards(1)
-//                    .NumberOfReplicas(0))
-//                .Mappings(m => m
-//                    .Map<TransactionReadModel>(d => d
-//                        .AutoMap())));
-
-            var id = new AccountId("account-59f5a0b8-61f3-47b2-87b9-5ad50c4ddc6d");
+            var id = new AccountId("account-b71862d8-5972-4359-87c3-b7c8d0f06dbb");
             var commandBus = resolver.Resolve<ICommandBus>();
-
-            var result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100),
+            
+//            var props = new List<Dictionary<string, object>>();
+//            props.Add(new Dictionary<string, object>() {{"item1", "value1"}});
+//            props.Add(new Dictionary<string, object>() {{"item2", "value2"}});
+            
+            var subfee1 = new KeyValuePair("myKey","MyValue");
+            var subfee2 = new Fee(Guid.NewGuid().ToString(), "MyLabel", "USD", "0.9", 0, 0);
+            var subfees = new List<Fee>(){subfee2};
+            var keyValueParis = new List<KeyValuePair>(){subfee1};
+            var item = new TransactionItem(100,"B2C Renewal",1,keyValueParis,subfees);
+            
+            var transaction = new Transaction("T-00001",id.ToString(),"Transaction","B2C Renewal",100,0,DateTimeOffset.Now, 20,"GBR","GBP",new List<TransactionItem>(){item});
+            
+                var result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
 
-            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 300),
+            result = await commandBus.PublishAsync(new DebitAccountCommand(id,transaction), 
                 CancellationToken.None);
-
-            result = await commandBus.PublishAsync(new DebitAccountCommand(id, 300),
+            
+             result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
-
-            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 300),
-                CancellationToken.None);
+//
+//            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100, "myexternalId",
+//                    DateTimeOffset.Now, "MyTransactionType",props),
+//                CancellationToken.None);
+//
+//            result = await commandBus.PublishAsync(new CreditAccountCommand(id, 100, "myexternalId",
+//                    DateTimeOffset.Now, "MyTransactionType",props),
+//                CancellationToken.None);
 
             var queryProcessor = resolver.Resolve<IQueryProcessor>();
 

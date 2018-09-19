@@ -1,38 +1,42 @@
 ﻿using System.Collections.Generic;
 using EventFlow.Aggregates;
+using EventFlow.MongoDB.ReadStores;
+using EventFlow.MongoDB.ReadStores.Attributes;
 using EventFlow.ReadStores;
 using Nest;
 
 namespace TransactionsCQRS.EventFlow
 {
-    [ElasticsearchType(IdProperty = "Id", Name = "account")]
-    public class AccountReadModel : IReadModel, IAmReadModelFor<AccountAggregate, AccountId, AccountCreditedEvent>,
-        IAmReadModelFor<AccountAggregate, AccountId, AccountDebitedEvent>
+    [MongoDbCollectionName("AccountReadModel")]
+    public class AccountReadModel : IMongoDbReadModel, IAmReadModelFor<AccountAggregate, AccountId, AccountCreditedEvent>,
+        IAmReadModelFor<AccountAggregate, AccountId, AccountDebitedEvent>,
+        IAmReadModelFor<AccountAggregate, AccountId, AccountBalanceChangedEvent>
     {
-        [Number(
-            NumberType.Integer,
-            Name = "Balance",
-            Index = false)]
+
         public long Balance { get; set; }
-
-        [Keyword(
-            Index = true)]
-        public string Id { get; set; }
-
 
         public void Apply(IReadModelContext context,
             IDomainEvent<AccountAggregate, AccountId, AccountCreditedEvent> domainEvent)
         {
-            Id = domainEvent.AggregateIdentity.Value;
-            Balance += domainEvent.AggregateEvent.Amount;
+            _id = domainEvent.AggregateIdentity.Value;
+            Balance = domainEvent.AggregateEvent.NewAccountBalance;
         }
 
 
         public void Apply(IReadModelContext context,
             IDomainEvent<AccountAggregate, AccountId, AccountDebitedEvent> domainEvent)
         {
-            Id = domainEvent.AggregateIdentity.Value;
-            Balance -= domainEvent.AggregateEvent.Amount;
+            _id = domainEvent.AggregateIdentity.Value;
+            Balance = domainEvent.AggregateEvent.NewAccountBalance;
+        }
+
+        public string _id { get; set; }
+        public long? _version { get; set; }
+        
+        public void Apply(IReadModelContext context, IDomainEvent<AccountAggregate, AccountId, AccountBalanceChangedEvent> domainEvent)
+        {
+            _id = domainEvent.AggregateIdentity.Value;
+            Balance = domainEvent.AggregateEvent.NewBalance;
         }
     }
 }

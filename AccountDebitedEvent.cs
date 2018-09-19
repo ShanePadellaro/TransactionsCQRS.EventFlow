@@ -4,13 +4,15 @@ namespace TransactionsCQRS.EventFlow
 {
     public class AccountDebitedEvent:AggregateEvent<AccountAggregate,AccountId>
     {
-        public long Amount { get; }
-        public long Balance { get; }
+        public Transaction Transaction { get; }
+        public long CurrentBalance { get; }
+        public long NewAccountBalance { get; }
 
-        public AccountDebitedEvent(long amount, long balance)
+        public AccountDebitedEvent(Transaction transaction, long currentBalance, long newAccountBalance)
         {
-            Amount = amount;
-            Balance = balance;
+            Transaction = transaction;
+            CurrentBalance = currentBalance;
+            NewAccountBalance = newAccountBalance;
         }
     }
 }

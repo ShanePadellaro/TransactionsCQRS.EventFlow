@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsCQRS.EventFlow", "TransactionsCQRS.EventFlow.csproj", "{B5C4CBE4-527E-4F3C-9540-20DCD3667006}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.MongoDB", "..\EventFlow.MongoDB\Source\EventFlow.MongoDB\EventFlow.MongoDB.csproj", "{84006117-E695-417A-B050-52778417C38A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow", "..\EventFlow\Source\EventFlow\EventFlow.csproj", "{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{B5C4CBE4-527E-4F3C-9540-20DCD3667006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C4CBE4-527E-4F3C-9540-20DCD3667006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C4CBE4-527E-4F3C-9540-20DCD3667006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84006117-E695-417A-B050-52778417C38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84006117-E695-417A-B050-52778417C38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84006117-E695-417A-B050-52778417C38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84006117-E695-417A-B050-52778417C38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

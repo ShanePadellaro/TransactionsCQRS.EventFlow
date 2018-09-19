@@ -10,30 +10,48 @@ namespace TransactionsCQRS.EventFlow
         {
         }
 
-        public Transaction Credit(long amount)
-        {
-            Emit(new AccountCreditedEvent(amount,Balance));
-            return new Transaction(Id,TransactionId.New,"credit",Balance,amount);;
 
+        private void ChangeBalance(long transactionAmount)
+        {
+            Balance = transactionAmount;
         }
+
+        public void Apply(AccountDebitedEvent @event)
+        {   
+            ChangeBalance(@event.Transaction.Amount);
+        }
+        
         
         public void Apply(AccountCreditedEvent @event)
         {
-            Balance += @event.Amount;
-        }
-        
-        public void Apply(AccountDebitedEvent @event)
-        {
-            Balance -= @event.Amount;
+            ChangeBalance(@event.Transaction.Amount);
         }
 
-        public Transaction Debit(long amount)
+        public IExecutionResult Credit(Transaction transaction)
         {
-            Emit(new AccountDebitedEvent(amount,Balance));
-            var x = new Transaction(Id,TransactionId.New,"debit",Balance,amount);
-            
-            x.Test();
-            return x;
+            var newBalance = Balance + transaction.Amount;
+            Emit(new AccountCreditedEvent(transaction,Balance,newBalance));
+            return new SuccessExecutionResult();
+
+        }
+
+        public IExecutionResult Debit(Transaction transaction)
+        {
+            var newBalance = Balance - transaction.Amount;
+            Emit(new AccountDebitedEvent(transaction,Balance,newBalance));
+            return new SuccessExecutionResult();
+        }
+    }
+
+    public class AccountBalanceChangedEvent:IAggregateEvent<AccountAggregate,AccountId>
+    {
+        public long NewBalance { get; }
+        public long OldBalance { get; }
+
+        public AccountBalanceChangedEvent(long newBalance, long oldBalance)
+        {
+            NewBalance = newBalance;
+            OldBalance = oldBalance;
         }
     }
 }

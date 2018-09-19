@@ -12,9 +12,9 @@ namespace TransactionsCQRS.EventFlow
         public override Task<IExecutionResult> ExecuteCommandAsync(AccountAggregate aggregate,
             CreditAccountCommand command, CancellationToken cancellationToken)
         {
-            var result = aggregate.Credit(command.Amount);
-
-            return Task.FromResult<IExecutionResult>(new SuccessExecutionResult());
+            var result = aggregate.Credit(command.Transaction);
+            return Task.FromResult<IExecutionResult>(result);
         }
+        
     }
 }

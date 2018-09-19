@@ -5,11 +5,11 @@ namespace TransactionsCQRS.EventFlow
 {
     public class DebitAccountCommand : Command<AccountAggregate, AccountId, IExecutionResult>
     {
-        public long Amount { get; }
+        public Transaction Transaction { get; }
 
-        public DebitAccountCommand(AccountId aggregateId, long amount) : base(aggregateId)
+        public DebitAccountCommand(AccountId aggregateId, Transaction transaction) : base(aggregateId)
         {
-            Amount = amount;
+            Transaction = transaction;
         }
     }
 }

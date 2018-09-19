@@ -12,8 +12,6 @@ namespace TransactionsCQRS.EventFlow
             {
                 yield return TransactionId.New.Value;
             }
-
-            yield break;
         }
     }
 }
