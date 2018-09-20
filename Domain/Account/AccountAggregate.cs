@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using EventFlow.Aggregates.ExecutionResults;
 using EventFlow.Snapshots;
 using EventFlow.Snapshots.Strategies;
-using MongoDB.Driver;
+using TransactionsCQRS.EventFlow.Domain.Account.Events;
+using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account
 {
     public class AccountAggregate : SnapshotAggregateRoot<AccountAggregate, AccountId, AccountSnapshot>
     {

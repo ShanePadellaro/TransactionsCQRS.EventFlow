@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using EventFlow.Aggregates;
 using EventFlow.ValueObjects;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.ValueObjects
 {
     public class Transaction : ValueObject
     {

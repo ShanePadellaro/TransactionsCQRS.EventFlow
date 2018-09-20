@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using EventFlow.Aggregates;
 using EventFlow.ReadStores;
+using TransactionsCQRS.EventFlow.Domain.Account.Events;
+using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.ReadModels
 {
     public class TransactionReadModelLocator : IReadModelLocator
     {

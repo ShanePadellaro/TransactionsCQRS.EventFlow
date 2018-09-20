@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using EventFlow.Elasticsearch.ReadStores;
 using EventFlow.Queries;
 using MongoDB.Driver;
+using TransactionsCQRS.EventFlow.Domain.Account.ReadModels;
 
-namespace TransactionsCQRS.EventFlow.Queries
+namespace TransactionsCQRS.EventFlow.Domain.Account.Queries
 {
     public class GetAccountByIdQueryHandler :
         IQueryHandler<GetAccountByIdQuery, AccountReadModel>

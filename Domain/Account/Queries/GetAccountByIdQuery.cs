@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using EventFlow.Queries;
+using TransactionsCQRS.EventFlow.Domain.Account.ReadModels;
 
-namespace TransactionsCQRS.EventFlow.Queries
+namespace TransactionsCQRS.EventFlow.Domain.Account.Queries
 {
     public class GetAccountByIdQuery : IQuery<AccountReadModel>
     {

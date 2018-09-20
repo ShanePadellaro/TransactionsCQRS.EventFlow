@@ -1,6 +1,7 @@
 ﻿using EventFlow.Aggregates;
+using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.Events
 {
     public class AccountDebitedEvent:AggregateEvent<AccountAggregate,AccountId>
     {

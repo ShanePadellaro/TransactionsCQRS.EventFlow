@@ -1,6 +1,6 @@
 ﻿using EventFlow.Aggregates;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.Events
 {
     public class AccountBalanceChangedEvent : IAggregateEvent<AccountAggregate, AccountId>
     {

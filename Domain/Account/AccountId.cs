@@ -1,6 +1,6 @@
 ﻿using EventFlow.Core;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account
 {
     public class AccountId :
         Identity<AccountId>

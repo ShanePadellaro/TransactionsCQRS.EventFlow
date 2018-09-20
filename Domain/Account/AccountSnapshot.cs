@@ -1,6 +1,6 @@
 ﻿using EventFlow.Snapshots;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account
 {
     [SnapshotVersion("account", 1)]
     public class AccountSnapshot : ISnapshot

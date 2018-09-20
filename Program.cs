@@ -12,9 +12,13 @@ using EventFlow.Elasticsearch.Extensions;
 using EventFlow.Extensions;
 using EventFlow.MongoDB.Extensions;
 using EventFlow.Queries;
-using EventFlow.ValueObjects;
 using Nest;
-using TransactionsCQRS.EventFlow.Queries;
+using TransactionsCQRS.EventFlow.Domain.Account;
+using TransactionsCQRS.EventFlow.Domain.Account.Commands;
+using TransactionsCQRS.EventFlow.Domain.Account.Queries;
+using TransactionsCQRS.EventFlow.Domain.Account.ReadModels;
+using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
+using KeyValuePair = TransactionsCQRS.EventFlow.Domain.Account.ValueObjects.KeyValuePair;
 
 namespace TransactionsCQRS.EventFlow
 {
@@ -101,41 +105,6 @@ namespace TransactionsCQRS.EventFlow
                     new GetFeesByCompanyIdQuery("b3e4bf26-c93b-41f6-adf1-27b85fa82c91"), 
                     CancellationToken.None)
                 .ConfigureAwait(false);
-        }
-    }
-
-    public class CreateAccountCommand:Command<AccountAggregate,AccountId>
-    {
-        public AccountDetails AccountDetails { get; }
-
-        public CreateAccountCommand(AccountDetails accountDetails) : base(AccountId.New)
-        {
-            AccountDetails = accountDetails;
-        }
-    }
-
-    public class CreateAccountCommandHandler : CommandHandler<AccountAggregate, AccountId, CreateAccountCommand>
-    {
-        public override Task ExecuteAsync(AccountAggregate aggregate, CreateAccountCommand command, CancellationToken cancellationToken)
-        {
-            var result= aggregate.OpenAccount(command.AccountDetails);
-            return Task.FromResult(result);
-        }
-    }
-
-    public class AccountDetails:ValueObject
-    {
-        public string Externalid { get; }
-        public string CountryCode { get; }
-        public string CurrencyCode { get; }
-        public int StartingBalance { get; }
-
-        public AccountDetails(string externalid, string countryCode, string currencyCode, int startingBalance)
-        {
-            Externalid = externalid;
-            CountryCode = countryCode;
-            CurrencyCode = currencyCode;
-            StartingBalance = startingBalance;
         }
     }
 }

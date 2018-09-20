@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using EventFlow.Aggregates.ExecutionResults;
 using EventFlow.Commands;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.Commands
 {
     public class
         CreditAccountCommandHandler : CommandHandler<AccountAggregate, AccountId, IExecutionResult, CreditAccountCommand

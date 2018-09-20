@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using EventFlow.Aggregates;
+﻿using EventFlow.Aggregates;
 using EventFlow.MongoDB.ReadStores;
 using EventFlow.MongoDB.ReadStores.Attributes;
 using EventFlow.ReadStores;
-using Nest;
+using TransactionsCQRS.EventFlow.Domain.Account.Events;
 
-namespace TransactionsCQRS.EventFlow
+namespace TransactionsCQRS.EventFlow.Domain.Account.ReadModels
 {
     [MongoDbCollectionName("AccountReadModel")]
     public class AccountReadModel : IMongoDbReadModel, IAmReadModelFor<AccountAggregate, AccountId, AccountCreditedEvent>,

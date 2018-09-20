@@ -1,6 +1,4 @@
-﻿using EventFlow.Aggregates;
-
-namespace TransactionsCQRS.EventFlow
+﻿namespace TransactionsCQRS.EventFlow.Domain.Account.Commands
 {
 //    public class TransactionCreatedEvent:AggregateEvent<Transaction,TransactionId>
 //    {
