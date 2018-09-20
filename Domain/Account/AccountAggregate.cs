@@ -17,7 +17,7 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
         public string ExternalId { get; private set; }
         public string AccountName { get; set; }
 
-        public AccountAggregate(AccountId id) : base(id, SnapshotEveryFewVersionsStrategy.With(100))
+        public AccountAggregate(AccountId id) : base(id, SnapshotEveryFewVersionsStrategy.With(5))
         {
         }
 
@@ -65,7 +65,14 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
 
         protected override Task<AccountSnapshot> CreateSnapshotAsync(CancellationToken cancellationToken)
         {
-            var snapshot = new AccountSnapshot() {Balance = this.Balance};
+            var snapshot = new AccountSnapshot()
+            {
+                Balance = this.Balance,
+                CountryCode = this.CountryCode,
+                CurrencyCode = this.CurrencyCode,
+                AccountName = this.AccountName,
+                ExternalId = this.ExternalId
+            };
             return Task.FromResult(snapshot);
         }
 
@@ -73,6 +80,10 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
             CancellationToken cancellationToken)
         {
             Balance = snapshot.Balance;
+            CountryCode = snapshot.CountryCode;
+            CurrencyCode = snapshot.CountryCode;
+            AccountName = snapshot.AccountName;
+            ExternalId = snapshot.ExternalId;
 
             return Task.CompletedTask;
         }
