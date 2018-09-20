@@ -43,11 +43,15 @@ namespace TransactionsCQRS.EventFlow
 //                .AddQueryHandler<GetFeesByCompanyIdQueryHandler,GetFeesByCompanyIdQuery,List<TransactionReadModel>>()
                 .AddQueryHandlers(Assembly.GetExecutingAssembly())
                 .CreateResolver();
-
-
-            var id = new AccountId("account-b71862d8-5972-4359-87c3-b7c8d0f06dbb");
-            var commandBus = resolver.Resolve<ICommandBus>();
             
+            var commandBus = resolver.Resolve<ICommandBus>();
+
+            var accountDetails = new AccountDetails("ExternalId","Name", "GBR", "GBP", 50);
+            var recipt = await commandBus.PublishAsync(new CreateAccountCommand(accountDetails),
+                CancellationToken.None);
+
+//            var id = new AccountId("account-b71862d8-5972-4359-87c3-b7c8d0f06dbb");
+            var id = recipt.Id;
 //            var props = new List<Dictionary<string, object>>();
 //            props.Add(new Dictionary<string, object>() {{"item1", "value1"}});
 //            props.Add(new Dictionary<string, object>() {{"item2", "value2"}});
@@ -69,9 +73,7 @@ namespace TransactionsCQRS.EventFlow
                  result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
 
-            var accountDetails = new AccountDetails("ExternalId", "GBR", "GBP", 50);
-            await commandBus.PublishAsync(new CreateAccountCommand(accountDetails),
-                CancellationToken.None);
+            
             
             
 //            result = await commandBus.PublishAsync(new DebitAccountCommand(id,transaction), 

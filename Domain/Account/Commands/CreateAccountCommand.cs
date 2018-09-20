@@ -3,7 +3,7 @@ using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
 
 namespace TransactionsCQRS.EventFlow.Domain.Account.Commands
 {
-    public class CreateAccountCommand:Command<AccountAggregate,AccountId>
+    public class CreateAccountCommand:Command<AccountAggregate,AccountId,AccountOpenedRecipt>
     {
         public AccountDetails AccountDetails { get; }
 

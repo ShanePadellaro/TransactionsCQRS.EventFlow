@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EventFlow.Aggregates.ExecutionResults;
 using EventFlow.Snapshots;
 using EventFlow.Snapshots.Strategies;
+using Nest;
 using TransactionsCQRS.EventFlow.Domain.Account.Events;
 using TransactionsCQRS.EventFlow.Domain.Account.ValueObjects;
 
@@ -14,6 +15,7 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
         public string CountryCode { get; private set; }
         public string CurrencyCode { get; private set; }
         public string ExternalId { get; private set; }
+        public string AccountName { get; set; }
 
         public AccountAggregate(AccountId id) : base(id, SnapshotEveryFewVersionsStrategy.With(100))
         {
@@ -42,7 +44,9 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
             Balance = @event.AccountDetails.StartingBalance;
             CountryCode = @event.AccountDetails.CountryCode;
             CurrencyCode = @event.AccountDetails.CurrencyCode;
+            AccountName = @event.AccountDetails.Name;
         }
+
 
 
         public IExecutionResult Credit(Transaction transaction)
@@ -73,12 +77,13 @@ namespace TransactionsCQRS.EventFlow.Domain.Account
             return Task.CompletedTask;
         }
 
-        public IExecutionResult OpenAccount(AccountDetails commandAccountDetails)
+        public AccountOpenedRecipt OpenAccount(AccountDetails accountDetails)
         {
 //            if(Version > 0)
 //                return new FailedExecutionResult("AggregateVersion can't be more than ");
-            Emit(new AccountCreatedEvent(commandAccountDetails));
-            return new SuccessExecutionResult();
+            var recipt = new AccountOpenedRecipt(accountDetails,Id);
+            Emit(new AccountCreatedEvent(accountDetails));
+            return recipt;
         }
     }
 }
