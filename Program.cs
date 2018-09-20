@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFlow;
+using EventFlow.Aggregates;
+using EventFlow.Commands;
 using EventFlow.Core;
 using EventFlow.Elasticsearch.Extensions;
 using EventFlow.Extensions;
 using EventFlow.MongoDB.Extensions;
 using EventFlow.Queries;
+using EventFlow.ValueObjects;
 using Nest;
 using TransactionsCQRS.EventFlow.Queries;
 
@@ -21,18 +26,18 @@ namespace TransactionsCQRS.EventFlow
                 .ConfigureElasticsearch(new Uri("http://localhost:9200/"))
                 .ConfigureMongoDb("mongodb://localhost", "test")
                 .UseMongoDbEventStore()
-                .AddEvents(typeof(AccountCreditedEvent))
-                .AddEvents(typeof(AccountDebitedEvent))
-                .AddEvents(typeof(AccountBalanceChangedEvent))
-                .AddCommands(typeof(CreditAccountCommand))
-                .AddCommands(typeof(DebitAccountCommand))
-                .AddCommandHandlers(typeof(DebitAccountCommandHandler))
-                .AddCommandHandlers(typeof(CreditAccountCommandHandler))
+                .UseMongoDbSnapshotStore()
+                .AddSnapshots(Assembly.GetExecutingAssembly())
+                .AddCommands(Assembly.GetExecutingAssembly(),x=>x.IsSubclassOf(typeof(Command<,>)))
+                .AddEvents(Assembly.GetExecutingAssembly())
+                .AddCommandHandlers(Assembly.GetExecutingAssembly())
                 .UseMongoDbReadModel<AccountReadModel>()
                 .RegisterServices(x=>x.RegisterType(typeof(TransactionReadModelLocator)))
                 .UseMongoDbReadModel<TransactionReadModel,TransactionReadModelLocator>()
-                .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
-                .AddQueryHandler<GetFeesByCompanyIdQueryHandler,GetFeesByCompanyIdQuery,List<TransactionReadModel>>()
+                .AddQueryHandlers(Assembly.GetExecutingAssembly())
+//                .AddQueryHandler<GetAccountByIdQueryHandler, GetAccountByIdQuery, AccountReadModel>()
+//                .AddQueryHandler<GetFeesByCompanyIdQueryHandler,GetFeesByCompanyIdQuery,List<TransactionReadModel>>()
+                .AddQueryHandlers(Assembly.GetExecutingAssembly())
                 .CreateResolver();
 
 
@@ -54,17 +59,36 @@ namespace TransactionsCQRS.EventFlow
             
                 var result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
+            
+             result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
+                CancellationToken.None);
+                 result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
+                CancellationToken.None);
 
+            var accountDetails = new AccountDetails("ExternalId", "GBR", "GBP", 50);
+            await commandBus.PublishAsync(new CreateAccountCommand(accountDetails),
+                CancellationToken.None);
+            
+            
 //            result = await commandBus.PublishAsync(new DebitAccountCommand(id,transaction), 
 //                CancellationToken.None);
 
+//            var tasks = new List<Task>();
+//            for (int i = 0; i < 100000; i++)
+//            {
+//                await commandBus.PublishAsync(new CreditAccountCommand(id, transaction),
+//                    CancellationToken.None);
+////                tasks.Add(task);
+//            }
 
-            for (int i = 0; i < 100000; i++)
-            {
-                result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
-                    CancellationToken.None);
-            }
-            
+//            while (tasks.Count != 0)
+//            {
+//                var t = tasks.Take(6).ToList();
+//                t.ForEach(d=>d.Start());
+//                Task.WaitAll(t.ToArray());
+//                tasks.RemoveAll(x => t.Contains(x));
+//
+//            }
 
             var queryProcessor = resolver.Resolve<IQueryProcessor>();
 
@@ -77,6 +101,41 @@ namespace TransactionsCQRS.EventFlow
                     new GetFeesByCompanyIdQuery("b3e4bf26-c93b-41f6-adf1-27b85fa82c91"), 
                     CancellationToken.None)
                 .ConfigureAwait(false);
+        }
+    }
+
+    public class CreateAccountCommand:Command<AccountAggregate,AccountId>
+    {
+        public AccountDetails AccountDetails { get; }
+
+        public CreateAccountCommand(AccountDetails accountDetails) : base(AccountId.New)
+        {
+            AccountDetails = accountDetails;
+        }
+    }
+
+    public class CreateAccountCommandHandler : CommandHandler<AccountAggregate, AccountId, CreateAccountCommand>
+    {
+        public override Task ExecuteAsync(AccountAggregate aggregate, CreateAccountCommand command, CancellationToken cancellationToken)
+        {
+            var result= aggregate.OpenAccount(command.AccountDetails);
+            return Task.FromResult(result);
+        }
+    }
+
+    public class AccountDetails:ValueObject
+    {
+        public string Externalid { get; }
+        public string CountryCode { get; }
+        public string CurrencyCode { get; }
+        public int StartingBalance { get; }
+
+        public AccountDetails(string externalid, string countryCode, string currencyCode, int startingBalance)
+        {
+            Externalid = externalid;
+            CountryCode = countryCode;
+            CurrencyCode = currencyCode;
+            StartingBalance = startingBalance;
         }
     }
 }
