@@ -63,7 +63,7 @@ namespace TransactionsCQRS.EventFlow
             var keyValueParis = new List<KeyValuePair>(){subfee1};
             var item = new TransactionItem(100,"B2C Renewal",1,keyValueParis,subfees);
             
-            var transaction = new Transaction("T-00001",id.ToString(),"Transaction","B2C Renewal",100,0,DateTimeOffset.Now, 20,"GBR","GBP",new List<TransactionItem>(){item});
+            var transaction = new Transaction("T-00001",id.ToString(),"Transaction","B2C Renewal",100,0,DateTime.Now, 20,"GBR","GBP",new List<TransactionItem>(){item});
             
                 var result = await commandBus.PublishAsync(new CreditAccountCommand(id,transaction),
                 CancellationToken.None);
@@ -105,6 +105,11 @@ namespace TransactionsCQRS.EventFlow
             
             var transactions = await queryProcessor.ProcessAsync(
                     new GetFeesByCompanyIdQuery("b3e4bf26-c93b-41f6-adf1-27b85fa82c91"), 
+                    CancellationToken.None)
+                .ConfigureAwait(false);
+            
+            var taxes = await queryProcessor.ProcessAsync(
+                    new GetTransactionsByCountry("gbr",DateTime.Now.AddDays(-1),DateTime.Now.AddDays(1),skip:1,take:2), 
                     CancellationToken.None)
                 .ConfigureAwait(false);
         }

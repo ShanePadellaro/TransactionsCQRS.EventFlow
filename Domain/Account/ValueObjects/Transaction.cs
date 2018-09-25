@@ -7,7 +7,7 @@ namespace TransactionsCQRS.EventFlow.Domain.Account.ValueObjects
     public class Transaction : ValueObject
     {
         public Transaction(string externalId, string accountId, string description, string type, long amount, long tax,
-            DateTimeOffset billingDate, long taxrate, string countryCode, string currencyCode,
+            DateTime billingDate, long taxrate, string countryCode, string currencyCode,
             List<TransactionItem> transactionItems, List<Dictionary<string, object>> properties = null)
         {
             ExternalId = externalId;
@@ -31,7 +31,7 @@ namespace TransactionsCQRS.EventFlow.Domain.Account.ValueObjects
         public List<Dictionary<string, object>> Properties { get; }
         public long Amount { get; private set; }
         public long Tax { get; private set; }
-        public DateTimeOffset BillingDate { get; }
+        public DateTime BillingDate { get; }
         public long Taxrate { get; private set; }
         public string CountryCode { get; private set; }
         public string CurrencyCode { get; private set; }
