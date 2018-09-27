@@ -13,6 +13,9 @@
           <!--<Version>0.65.3664</Version>-->
         <!--</PackageReference>-->
         <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="RabbitMQ.Client">
+            <Version>6.0.0-pre2</Version>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -20,6 +23,13 @@
       <ProjectReference Include="..\..\EventFlow\Source\EventFlow.AspNetCore\EventFlow.AspNetCore.csproj" />
       <ProjectReference Include="..\..\EventFlow\Source\EventFlow.DependencyInjection\EventFlow.DependencyInjection.csproj" />
       <ProjectReference Include="..\..\EventFlow\Source\EventFlow\EventFlow.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.json">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

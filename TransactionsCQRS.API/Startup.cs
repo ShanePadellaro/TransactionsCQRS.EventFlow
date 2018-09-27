@@ -19,6 +19,7 @@ using EventFlow.Extensions;
 using EventFlow.MongoDB.Extensions;
 using TransactionsCQRS.API.Domain.Account.Events;
 using TransactionsCQRS.API.Domain.Account.ReadModels;
+using TransactionsCQRS.API.Infrastructure;
 
 namespace TransactionsCQRS.API
 {
@@ -34,6 +35,13 @@ namespace TransactionsCQRS.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            
+            services.AddSingleton(config);
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddEventFlow(o =>
                 o.ConfigureMongoDb("mongodb://localhost", "test")
@@ -48,6 +56,9 @@ namespace TransactionsCQRS.API
                     .UseMongoDbReadModel<TransactionReadModel, TransactionReadModelLocator>()
                     .AddQueryHandlers(Assembly.GetExecutingAssembly())
                     .AddAspNetCoreMetadataProviders());
+            
+            services.AddHostedService<TransactionProcessor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
