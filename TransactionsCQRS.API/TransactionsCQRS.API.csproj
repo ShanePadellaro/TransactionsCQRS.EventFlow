@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="wwwroot\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--<PackageReference Include="EventFlow.DependencyInjection">-->
+          <!--<Version>0.65.3664</Version>-->
+        <!--</PackageReference>-->
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\EventFlow.MongoDB\Source\EventFlow.MongoDB\EventFlow.MongoDB.csproj" />
+      <ProjectReference Include="..\..\EventFlow\Source\EventFlow.AspNetCore\EventFlow.AspNetCore.csproj" />
+      <ProjectReference Include="..\..\EventFlow\Source\EventFlow.DependencyInjection\EventFlow.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\EventFlow\Source\EventFlow\EventFlow.csproj" />
+    </ItemGroup>
+
+</Project>

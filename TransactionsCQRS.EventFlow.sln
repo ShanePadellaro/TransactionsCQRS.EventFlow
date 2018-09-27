@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsCQRS.EventFlow"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsCQRS.API", "TransactionsCQRS.API\TransactionsCQRS.API.csproj", "{48611C72-90B1-40F1-A7C1-8D166156F2E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.DependencyInjection", "..\EventFlow\Source\EventFlow.DependencyInjection\EventFlow.DependencyInjection.csproj", "{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.AspNetCore", "..\EventFlow\Source\EventFlow.AspNetCore\EventFlow.AspNetCore.csproj", "{EDCF66FD-6878-4616-A7EA-0E5E3E97B3CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDCF66FD-6878-4616-A7EA-0E5E3E97B3CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDCF66FD-6878-4616-A7EA-0E5E3E97B3CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDCF66FD-6878-4616-A7EA-0E5E3E97B3CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDCF66FD-6878-4616-A7EA-0E5E3E97B3CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
