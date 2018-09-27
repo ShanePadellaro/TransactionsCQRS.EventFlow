@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.MongoDB", "..\Eve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow", "..\EventFlow\Source\EventFlow\EventFlow.csproj", "{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsCQRS.EventFlow", "TransactionsCQRS.EventFlow\TransactionsCQRS.EventFlow.csproj", "{611FD3B7-0131-4553-92C7-CEC04F559B7A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsCQRS.API", "TransactionsCQRS.API\TransactionsCQRS.API.csproj", "{48611C72-90B1-40F1-A7C1-8D166156F2E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFlow.DependencyInjection", "..\EventFlow\Source\EventFlow.DependencyInjection\EventFlow.DependencyInjection.csproj", "{C5FF6DF7-EB17-44C7-8E0B-C321324EFD5A}"
@@ -26,10 +24,6 @@ Global
 		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{798DAD42-09F8-475F-8BC5-2B2725AD3F9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{611FD3B7-0131-4553-92C7-CEC04F559B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{611FD3B7-0131-4553-92C7-CEC04F559B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{611FD3B7-0131-4553-92C7-CEC04F559B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{611FD3B7-0131-4553-92C7-CEC04F559B7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48611C72-90B1-40F1-A7C1-8D166156F2E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
