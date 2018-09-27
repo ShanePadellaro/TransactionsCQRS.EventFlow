@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EventFlow;
 using EventFlow.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using TransactionsCQRS.API.Domain.Account.Commands;
 using TransactionsCQRS.API.Domain.Account.Queries;
 using TransactionsCQRS.API.Domain.Account.ValueObjects;
@@ -27,8 +28,13 @@ namespace TransactionsCQRS.API.Controllers
         }
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IEnumerable<string>> Get()
         {
+            var commandBus = Startup.ServiceProvider.GetService<ICommandBus>();
+            var accountDetails = new AccountDetails("ExternalId","Name", "GBR", "GBP", 50);
+            var recipt = await commandBus.PublishAsync(new CreateAccountCommand(accountDetails),
+                CancellationToken.None);
+
             return new string[] {"value1", "value2"};
         }
 
